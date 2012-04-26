@@ -65,12 +65,7 @@ function create_lib()
 
 function get_opt_release()
 {
-	es_script_content="#!/usr/bin/env escript\nmain(_) ->\nio:format('~p', [erlang:system_info(otp_release)]).\n"
-	es_script=/tmp/opt_release.escript
-	printf "$es_script_content" >$es_script
-	chmod u+x $es_script
-	echo "$($es_script)"
-	rm $es_script
+	echo $(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().'  -noshell)
 }
 
 case "$1" in
