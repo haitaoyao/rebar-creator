@@ -1,0 +1,79 @@
+#!/bin/bash
+##################################################################
+# 
+# written by haitao.yao @ 2012-04-25.22:21:17
+# 
+# 
+# 
+##################################################################
+current_dir="$(cd $(dirname $0);pwd)"
+
+project_name=$2
+if [ -z "$2" ]
+then
+	echo "Usage: $0 create-app|create-lib project_name"
+	exit 1
+fi
+
+if [ -d "$project_name" ]
+then
+	echo "project exists, name: $project_name"
+	exit 2
+fi
+
+rebar_config="%% -*- erlang -*-\n\
+{erl_opts, [debug_info]}.\n\
+{deps, []}.\n\
+{cover_enabled, true}.\n
+{eunit_opts, [verbose, {report,{eunit_surefire,[{dir,\".\"}]}}]}.\n\
+{sub_dirs, [\"apps/$project_name\", \"rel\"]}.\n"
+
+	
+function write_rebar_config()
+{
+	printf "$rebar_config" > rebar.config
+}
+function create_app()
+{
+	mkdir -p $project_name/apps/$project_name
+	mkdir -p $project_name/rel
+	cd $project_name
+	write_rebar_config
+	cd apps/$project_name
+	rebar create-app appid=$project_name
+	cd -
+	cd rel
+	rebar create-node nodeid=$project_name
+	sed 's/\[\]/\["..\/apps"\]/g' reltool.config > reltool.config.1
+	mv reltool.config.1 reltool.config
+	cd ../apps/$project_name
+	echo "erlang deployable app $project_name created, code path: "
+	pwd
+	cd -
+	echo "project parent path: $(pwd)"
+}
+
+function create_lib()
+{
+	mkdir $project_name
+	cd $project_name
+	write_rebar_config
+	rebar create-app appid=$project_name
+	echo "erlang libary $project_name created, path: "
+	pwd
+}
+
+case "$1" in
+	"create-lib")
+		create_lib
+		;;
+	"create-app")
+		create_app
+		;;
+	*)
+		echo "Usage: $0 create-app|create-lib project_name"
+		exit 1
+		;;
+
+esac
+
