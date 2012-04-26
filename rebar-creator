@@ -3,7 +3,7 @@
 # 
 # written by haitao.yao @ 2012-04-25.22:21:17
 # 
-# 
+# create the erlang project skeleton with rebar. 
 # 
 ##################################################################
 current_dir="$(cd $(dirname $0);pwd)"
