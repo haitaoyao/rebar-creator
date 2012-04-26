@@ -17,4 +17,10 @@ Usage:
 $ rebar-creator create-app|create-lib project_name
 ```
 
+Installation:
+--------
+Since it's just a little shell script, just download it with wget from github
+```sh
+$ wget https://raw.github.com/haitaoyao/rebar-creator/master/rebar-creator
+```
 
