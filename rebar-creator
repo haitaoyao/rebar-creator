@@ -3,7 +3,7 @@
 # 
 # written by haitao.yao @ 2012-04-25.22:21:17
 # 
-# create the erlang project skeleton with rebar. 
+# 
 # 
 ##################################################################
 current_dir="$(cd $(dirname $0);pwd)"
@@ -44,7 +44,7 @@ function create_app()
 	cd -
 	cd rel
 	rebar create-node nodeid=$project_name
-	sed 's/\[\]/\["..\/apps"\]/g' reltool.config > reltool.config.1
+	sed  's/\[\]/\["..\/apps", "..\/deps"\]/g' reltool.config >reltool.config.1
 	mv reltool.config.1 reltool.config
 	cd ../apps/$project_name
 	echo "erlang deployable app $project_name created, code path: "
@@ -63,11 +63,6 @@ function create_lib()
 	pwd
 }
 
-function get_opt_release()
-{
-	echo $(erl -eval 'erlang:display(erlang:system_info(otp_release)), halt().'  -noshell)
-}
-
 case "$1" in
 	"create-lib")
 		create_lib
@@ -82,4 +77,3 @@ case "$1" in
 
 esac
 
-echo "your otp vesion: $(get_opt_release)"
